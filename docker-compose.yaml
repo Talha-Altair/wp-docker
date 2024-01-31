@@ -1,7 +1,7 @@
 version: '3'
 services:
     mysql:
-        image: mysql:8.3.0-oraclelinux8
+        image: mariadb:11.2.2-jammy
         volumes:
             - ./data/mysql:/var/lib/mysql
         environment:
@@ -9,11 +9,9 @@ services:
             - MYSQL_DATABASE=famistrywp
             - MYSQL_USER=famistry
             - MYSQL_PASSWORD=fam1234
-        restart: unless-stopped
-        networks:
-            - wp_network
+        restart: always
     wordpress:
-        image: wordpress:6.4.2-php8.2-apache
+        image: wordpress:6.4.2-php8.3-fpm-alpine
         volumes:
             - ./data/html:/var/www/html
         depends_on:
@@ -27,31 +25,23 @@ services:
             - WORDPRESS_TABLE_PREFIX=wp_
         links:
             - mysql
-        restart: unless-stopped
-        networks:
-            - wp_network
+        restart: always
     phpmyadmin:
         depends_on:
             - mysql
         image: phpmyadmin:5.2.1-apache
-        restart: unless-stopped
+        restart: always
         ports:
             - '9080:80'
         environment:
             - PMA_HOST=mysql
             - MYSQL_ROOT_PASSWORD=root1234
-        networks:
-            - wp_network
     nginx:
         image: nginx:alpine
         volumes:
             - ./nginx:/etc/nginx/conf.d
             - ./data/html:/var/www/html
         ports:
-            - 5080:80
+            - '5080:80'
         links:
             - wordpress
-        networks:
-            - wp_network
-networks:
-    wp_network:
