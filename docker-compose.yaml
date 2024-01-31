@@ -7,6 +7,7 @@ services:
             - db_data:/var/lib/mysql
         restart: always
         env_file: .env
+        hostname: database
         environment:
             MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
             MYSQL_DATABASE: $MYSQL_DATABASE
@@ -24,7 +25,7 @@ services:
             - "9080:80"
         env_file: .env
         environment:
-            PMA_HOST: db
+            PMA_HOST: database
             MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
             MYSQL_USER: $MYSQL_USER
             MYSQL_PASSWORD: $MYSQL_PASSWORD
@@ -42,7 +43,7 @@ services:
             - wp_data:/var/www/html
         env_file: .env
         environment:
-            WORDPRESS_DB_HOST: db:3306
+            WORDPRESS_DB_HOST: database:3306
             WORDPRESS_DB_NAME: $MYSQL_DATABASE
             WORDPRESS_DB_USER: $MYSQL_USER
             WORDPRESS_DB_PASSWORD: $MYSQL_PASSWORD
