@@ -1,0 +1,144 @@
+server {
+    server_name backend.myfamistry.com;
+    location / {
+        proxy_pass http://localhost:3000;
+    }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/notification.myfamistry.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/notification.myfamistry.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+
+    server_name app.myfamistry.com;
+    location / {
+        proxy_pass http://localhost:8000;
+    }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/notification.myfamistry.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/notification.myfamistry.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    server_name subscription.myfamistry.com;
+    location / {
+        proxy_pass http://localhost:7500;
+    }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/notification.myfamistry.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/notification.myfamistry.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    server_name vectorizer.myfamistry.com;
+    location / {
+        proxy_pass http://localhost:8500;
+    }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/notification.myfamistry.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/notification.myfamistry.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    server_name notification.myfamistry.com;
+    location / {
+        proxy_pass http://localhost:6500;
+    }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/notification.myfamistry.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/notification.myfamistry.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+
+
+
+
+server {
+    if ($host = app.myfamistry.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+
+    server_name app.myfamistry.com;
+    listen 80;
+    return 404; # managed by Certbot
+
+
+}server {
+    if ($host = backend.myfamistry.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name backend.myfamistry.com;
+    listen 80;
+    return 404; # managed by Certbot
+
+
+}
+
+server {
+    if ($host = notification.myfamistry.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name notification.myfamistry.com;
+    listen 80;
+    return 404; # managed by Certbot
+
+
+}
+
+
+server {
+    if ($host = subscription.myfamistry.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name subscription.myfamistry.com;
+    listen 80;
+    return 404; # managed by Certbot
+
+
+}
+
+server {
+    if ($host = vectorizer.myfamistry.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name vectorizer.myfamistry.com;
+    listen 80;
+    return 404; # managed by Certbot
+
+
+}
