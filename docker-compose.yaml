@@ -1,59 +1,47 @@
-version: "3"
+version: '3'
 services:
-    # Database
-    db:
+    mysql:
         image: mysql:8.3.0-oraclelinux8
         volumes:
-            - db_data:/var/lib/mysql
-        restart: unless-stopped
-        env_file: .env
-        hostname: database
+            - ./data/mysql:/var/lib/mysql
         environment:
-            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-            MYSQL_DATABASE: $MYSQL_DATABASE
-            MYSQL_USER: $MYSQL_USER
-            MYSQL_PASSWORD: $MYSQL_PASSWORD
-        networks:
-            - wpNetwork
-    # phpmyadmin
+            - MYSQL_ROOT_PASSWORD=root1234
+            - MYSQL_DATABASE=famistrywp
+            - MYSQL_USER=famistry
+            - MYSQL_PASSWORD=fam1234
+        restart: unless-stopped
+    wordpress:
+        image: wordpress:6.4.2-php8.2-apache
+        volumes:
+            - ./data/html:/var/www/html
+        depends_on:
+            - mysql
+        environment:
+            - WORDPRESS_DB_HOST=mysql
+            - MYSQL_ROOT_PASSWORD=root1234
+            - WORDPRESS_DB_NAME=famistrywp
+            - WORDPRESS_DB_USER=famistry
+            - WORDPRESS_DB_PASSWORD=fam1234
+            - WORDPRESS_TABLE_PREFIX=wp_
+        links:
+            - mysql
+        restart: unless-stopped
     phpmyadmin:
         depends_on:
-            - db
+            - mysql
         image: phpmyadmin:5.2.1-apache
         restart: unless-stopped
         ports:
-            - "9080:80"
-        env_file: .env
+            - '9080:80'
         environment:
-            PMA_HOST: database
-            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-            MYSQL_USER: $MYSQL_USER
-            MYSQL_PASSWORD: $MYSQL_PASSWORD
-        networks:
-            - wpNetwork
-    # WordPress
-    wordpress:
-        depends_on:
-            - db
-        image: wordpress:6.4.2-php8.2-apache
-        ports:
-            - "9000:80"
-        restart: unless-stopped
+            - PMA_HOST=mysql
+            - MYSQL_ROOT_PASSWORD=root1234
+    nginx:
+        image: nginx:alpine
         volumes:
-            - /var/wp_data:/var/www/html
-        env_file: .env
-        environment:
-            WORDPRESS_DB_HOST: database
-            WORDPRESS_DB_NAME: $MYSQL_DATABASE
-            WORDPRESS_DB_USER: $MYSQL_USER
-            WORDPRESS_DB_PASSWORD: $MYSQL_PASSWORD
-            WORDPRESS_CONFIG_EXTRA: |-
-                define('WP_HOME', 'http://myfamistry.com/');
-                define('WP_SITEURL', 'http://myfamistry.com/');
-        networks:
-            - wpNetwork
-
-networks:
-    wpNetwork:
-volumes:
-    db_data:
+            - ./nginx:/etc/nginx/conf.d
+            - ./data/html:/var/www/html
+        ports:
+            - 5080:80
+        links:
+            - wordpress
