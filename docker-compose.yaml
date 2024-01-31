@@ -1,40 +1,40 @@
 version: "3"
 services:
     # Database
-    db:
-        image: mysql:8.3.0-oraclelinux8
-        volumes:
-            - db_data:/var/lib/mysql
-        restart: always
-        env_file: .env
-        hostname: database
-        environment:
-            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-            MYSQL_DATABASE: $MYSQL_DATABASE
-            MYSQL_USER: $MYSQL_USER
-            MYSQL_PASSWORD: $MYSQL_PASSWORD
-        networks:
-            - wpNetwork
-    # phpmyadmin
-    phpmyadmin:
-        depends_on:
-            - db
-        image: phpmyadmin:5.2.1-apache
-        restart: always
-        ports:
-            - "9080:80"
-        env_file: .env
-        environment:
-            PMA_HOST: database
-            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-            MYSQL_USER: $MYSQL_USER
-            MYSQL_PASSWORD: $MYSQL_PASSWORD
-        networks:
-            - wpNetwork
+    # db:
+    #     image: mysql:8.3.0-oraclelinux8
+    #     volumes:
+    #         - db_data:/var/lib/mysql
+    #     restart: always
+    #     env_file: .env
+    #     hostname: database
+    #     environment:
+    #         MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    #         MYSQL_DATABASE: $MYSQL_DATABASE
+    #         MYSQL_USER: $MYSQL_USER
+    #         MYSQL_PASSWORD: $MYSQL_PASSWORD
+    #     networks:
+    #         - wpNetwork
+    # # phpmyadmin
+    # phpmyadmin:
+    #     depends_on:
+    #         - db
+    #     image: phpmyadmin:5.2.1-apache
+    #     restart: always
+    #     ports:
+    #         - "9080:80"
+    #     env_file: .env
+    #     environment:
+    #         PMA_HOST: database
+    #         MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    #         MYSQL_USER: $MYSQL_USER
+    #         MYSQL_PASSWORD: $MYSQL_PASSWORD
+    #     networks:
+    #         - wpNetwork
     # WordPress
     wordpress:
-        depends_on:
-            - db
+        # depends_on:
+        #     - db
         image: wordpress:6.4.2-php8.2-apache
         ports:
             - "9000:80"
@@ -52,7 +52,7 @@ services:
                 define('WP_HOME', '/');
                 define('WP_SITEURL', '/');
                 define('WP_ALLOW_REPAIR', true);
-                define( 'WP_DEBUG_LOG', true );
+                define('WP_DEBUG_LOG', true );
         networks:
             - wpNetwork
 
