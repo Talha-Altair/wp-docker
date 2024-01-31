@@ -48,6 +48,14 @@ services:
             WORDPRESS_DB_PASSWORD: $MYSQL_PASSWORD
         networks:
             - wpNetwork
+
+    sidecar-config:
+        depends_on:
+            - wordpress
+        image: busybox:1.35.0
+        volumes:
+            - wp_data:/var/wp
+        command: echo "define('WP_HOME', '/'); define('WP_SITEURL', '/');" >> /var/wp/wp-config.php
 networks:
     wpNetwork:
 volumes:
