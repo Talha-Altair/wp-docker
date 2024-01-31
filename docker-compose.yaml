@@ -50,6 +50,7 @@ services:
             WORDPRESS_CONFIG_EXTRA: |-
                 define('WP_HOME', '/');
                 define('WP_SITEURL', '/');
+                define('WP_ALLOW_REPAIR', true);
         networks:
             - wpNetwork
 
