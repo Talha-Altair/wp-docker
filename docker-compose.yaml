@@ -40,7 +40,7 @@ services:
             - "9000:80"
         restart: unless-stopped
         volumes:
-            - wp_data:/var/www/html
+            - /var/wp_data:/var/www/html
         env_file: .env
         environment:
             WORDPRESS_DB_HOST: database
@@ -57,4 +57,3 @@ networks:
     wpNetwork:
 volumes:
     db_data:
-    wp_data:
